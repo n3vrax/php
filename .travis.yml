@@ -1,7 +1,5 @@
 sudo: required
 
-language: php
-
 if: branch = master
 
 services:
@@ -10,29 +8,25 @@ services:
 stages:
   - build-base-images
   - build-child-images
-
-before_script:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-
-script: skip
-
 jobs:
   include:
     - stage: build-base-images
-    - script:
+    script:
       - docker build --pull -t "$DOCKER_USERNAME/php:7.2-cli" -f "7.2-cli" .
       - docker build --pull -t "$DOCKER_USERNAME/php:7.2-fpm" -f "7.2-fpm" .
       - docker build --pull -t "$DOCKER_USERNAME/php:7.2-zts" -f "7.2-zts" .
+      - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
       - docker push "$DOCKER_USERNAME/php:7.2-cli"
       - docker push "$DOCKER_USERNAME/php:7.2-fpm"
       - docker push "$DOCKER_USERNAME/php:7.2-zts"
 
     - stage: build-child-images
-    - script:
+    script:
       - docker build --pull -t "$DOCKER_USERNAME/php:7.2-cli-opcache" -f "7.2-cli-opcache" .
       - docker build --pull -t "$DOCKER_USERNAME/php:7.2-fpm-opcache" -f "7.2-fpm-opcache" .
       - docker build --pull -t "$DOCKER_USERNAME/php:7.2-cli-xdebug" -f "7.2-cli-xdebug" .
       - docker build --pull -t "$DOCKER_USERNAME/php:7.2-fpm-xdebug" -f "7.2-fpm-xdebug" .
+      - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
       - docker push "$DOCKER_USERNAME/php:7.2-cli-opcache"
       - docker push "$DOCKER_USERNAME/php:7.2-fpm-opcache"
       - docker push "$DOCKER_USERNAME/php:7.2-cli-xdebug"
