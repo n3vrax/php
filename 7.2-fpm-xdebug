@@ -1,4 +1,4 @@
-FROM git.apidemia.net:4567/darehero/php:7.2-fpm
+FROM n3vrax/php:7.2-fpm
 
 ENV PHPIZE_DEPS \
     autoconf \
