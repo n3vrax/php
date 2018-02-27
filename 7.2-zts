@@ -1,0 +1,88 @@
+FROM php:7.2-zts-alpine
+
+LABEL maintainer="Popa Tiberiu <n3vrax@gmail.com>"
+
+ENV RABBITMQ_VERSION v0.8.0
+ENV ZMQ_VERSION 4.2.3
+ENV PHP_PTHREADS_VERSION master
+
+ENV PHPIZE_DEPS \
+    autoconf \
+    cmake \
+    file \
+    g++ \
+    gcc \
+    libc-dev \
+    pcre-dev \
+    make \
+    git \
+    pkgconf \
+    re2c
+
+RUN apk update && apk add --no-cache --virtual .persistent-deps \
+    # for intl extension
+    icu-dev \
+    # for mongodb
+    # for zero mq
+    libsodium-dev \
+    # for postgres
+    postgresql-dev \
+    # for soap
+    libxml2-dev \
+    zeromq-dev \
+    libunwind-dev \
+    linux-headers \
+    libmemcached-dev \
+    cyrus-sasl-dev
+
+RUN set -xe && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    && docker-php-ext-configure bcmath --enable-bcmath \
+    && docker-php-ext-configure intl --enable-intl \
+    && docker-php-ext-configure pcntl --enable-pcntl \
+    && docker-php-ext-install \
+        bcmath \
+        intl \
+        pcntl \
+        pdo_mysql \
+        pdo_pgsql \
+    \
+    && git clone --branch ${PHP_PTHREADS_VERSION} https://github.com/krakjoe/pthreads.git /tmp/php-pthreads \
+        && cd /tmp/php-pthreads \
+        && phpize  \
+        && ./configure  \
+        && make  \
+        && make install \
+        && make test \
+    && cd /tmp && git clone --branch ${RABBITMQ_VERSION} https://github.com/alanxz/rabbitmq-c.git /tmp/rabbitmq \
+        && cd /tmp/rabbitmq \
+        && mkdir build && cd build \
+        && cmake .. \
+        && cmake --build . --target install \
+        # workaround for linking issue
+        && cp -r /usr/local/lib64/* /usr/lib/ \
+    \
+    && pecl install \
+        memcached \
+        mongodb \
+        zmq-beta \
+        amqp \
+        redis \
+        swoole \
+    \
+    && apk del .build-deps \
+    && rm -rf /tmp/*
+
+RUN docker-php-ext-enable mongodb \
+    && docker-php-ext-enable pthreads \
+    && docker-php-ext-enable memcached \
+    && docker-php-ext-enable zmq \
+    && docker-php-ext-enable amqp \
+    && docker-php-ext-enable redis \
+    && docker-php-ext-enable swoole
+
+COPY config/php-cli.ini /usr/local/etc/php/php.ini
+
+WORKDIR /app
+
+# Set up the application directory
+VOLUME ["/app"]

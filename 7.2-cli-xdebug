@@ -1,0 +1,24 @@
+FROM git.apidemia.net:4567/darehero/php:7.2-cli
+
+ENV XDEBUG_HOST=172.17.0.1
+
+ENV PHPIZE_DEPS \
+    autoconf \
+    cmake \
+    file \
+    g++ \
+    gcc \
+    libc-dev \
+    pcre-dev \
+    make \
+    git \
+    pkgconf \
+    re2c
+
+RUN set -xe && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    && pecl install xdebug \
+    && apk del .build-deps
+
+# Copy custom configuration
+COPY config/xdebug-cli.ini /usr/local/etc/php/conf.d/
+COPY config/php-dev.ini /usr/local/etc/php/conf.d/

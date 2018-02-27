@@ -1,0 +1,37 @@
+sudo: required
+
+language: php
+
+if: branch = master
+
+services:
+  - docker
+
+stages:
+  - build-base-images
+  - build-child-images
+
+before_script:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+
+jobs:
+  include:
+    - stage: build-base-images
+    - script:
+      - docker build --pull -t "n3vrax/php:7.2-cli" -f "7.2-cli"
+      - docker build --pull -t "n3vrax/php:7.2-fpm" -f "7.2-fpm"
+      - docker build --pull -t "n3vrax/php:7.2-zts" -f "7.2-zts"
+      - docker push "n3vrax/php:7.2-cli"
+      - docker push "n3vrax/php:7.2-fpm"
+      - docker push "n3vrax/php:7.2-zts"
+
+    - stage: build-child-images
+    - script:
+      - docker build --pull -t "n3vrax/php:7.2-cli-opcache" -f "7.2-cli-opcache"
+      - docker build --pull -t "n3vrax/php:7.2-fpm-opcache" -f "7.2-fpm-opcache"
+      - docker build --pull -t "n3vrax/php:7.2-cli-xdebug" -f "7.2-cli-xdebug"
+      - docker build --pull -t "n3vrax/php:7.2-fpm-xdebug" -f "7.2-fpm-xdebug"
+      - docker push "n3vrax/php:7.2-cli-opcache"
+      - docker push "n3vrax/php:7.2-fpm-opcache"
+      - docker push "n3vrax/php:7.2-cli-xdebug"
+      - docker push "n3vrax/php:7.2-fpm-xdebug"

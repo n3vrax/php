@@ -1,0 +1,5 @@
+README.md
+.gitignore
+.editorconfig
+7.2-*
+.travis.yml
