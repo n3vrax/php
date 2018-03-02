@@ -1,0 +1,30 @@
+-sudo: required
+-
+-if: branch = master
+-
+-services:
+-  - docker
+-
+-env:
+-  global:
+-    - IMAGE_NAME=$DOCKER_USERNAME/php
+-
+-before_script:
+-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+-
+-script:
+-  - docker build --pull -t "$IMAGE_NAME:7.2-cli" -f "7.2-cli" .
+-  - docker build --pull -t "$IMAGE_NAME:7.2-fpm" -f "7.2-fpm" .
+-  - docker build --pull -t "$IMAGE_NAME:7.2-zts" -f "7.2-zts" .
+-  - docker push "$IMAGE_NAME:7.2-cli"
+-  - docker push "$IMAGE_NAME:7.2-fpm"
+-  - docker push "$IMAGE_NAME:7.2-zts"
+-
+-  - docker build --pull -t "$IMAGE_NAME:7.2-cli-opcache" -f "7.2-cli-opcache" .
+-  - docker build --pull -t "$IMAGE_NAME:7.2-fpm-opcache" -f "7.2-fpm-opcache" .
+-  - docker build --pull -t "$IMAGE_NAME:7.2-cli-xdebug" -f "7.2-cli-xdebug" .
+-  - docker build --pull -t "$IMAGE_NAME:7.2-fpm-xdebug" -f "7.2-fpm-xdebug" .
+-  - docker push "$IMAGE_NAME:7.2-cli-opcache"
+-  - docker push "$IMAGE_NAME:7.2-fpm-opcache"
+-  - docker push "$IMAGE_NAME:7.2-cli-xdebug"
+-  - docker push "$IMAGE_NAME:7.2-fpm-xdebug"
