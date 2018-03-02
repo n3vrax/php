@@ -1,7 +1,5 @@
-# php-docker
+# php
 Custom build PHP images suitable for microservices
-
-[![Build Status](https://travis-ci.org/n3vrax/php-docker.svg?branch=master)](https://travis-ci.org/n3vrax/php-docker)
 
 Enables
 - mongodb
