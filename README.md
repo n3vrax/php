@@ -11,6 +11,7 @@ Enables
 - swoole
 - pthreads(zts image)
 
+
 There are also some variations
 - with xdebug for development
 - with opcache for prod
