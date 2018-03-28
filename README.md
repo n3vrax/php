@@ -8,6 +8,7 @@ Enables
 - redis
 - memcached
 - postgres
+- ds (Data Structures)
 - swoole
 - pthreads(zts image)
 
