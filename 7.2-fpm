@@ -28,7 +28,7 @@ RUN apk update && apk add --no-cache --virtual .persistent-deps \
     # for soap
     libxml2-dev \
     zeromq-dev \
-    rabbitmq-c \
+    rabbitmq-c-dev \
     libunwind-dev \
     linux-headers \
     libmemcached-dev \

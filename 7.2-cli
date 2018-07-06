@@ -30,7 +30,7 @@ RUN apk update && apk add --no-cache --virtual .persistent-deps \
     zeromq-dev \
     libunwind-dev \
     linux-headers \
-    rabbitmq-c \
+    rabbitmq-c-dev \
     libmemcached-dev \
     cyrus-sasl-dev
 
