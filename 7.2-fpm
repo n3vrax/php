@@ -2,9 +2,8 @@ FROM php:7.2-fpm-alpine
 
 LABEL maintainer="Popa Tiberiu <n3vrax@gmail.com>"
 
-ENV RABBITMQ_VERSION v0.8.0
-ENV ZMQ_VERSION 4.2.3
-ENV SWOOLE_VERSION 2.1.1
+ENV RABBITMQ_VERSION v0.9.0
+ENV SWOOLE_VERSION 4.0.1
 
 ENV PHPIZE_DEPS \
     autoconf \
