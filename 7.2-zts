@@ -2,7 +2,6 @@ FROM php:7.2-zts-alpine
 
 LABEL maintainer="Popa Tiberiu <n3vrax@gmail.com>"
 
-ENV RABBITMQ_VERSION v0.9.0
 ENV PHP_PTHREADS_VERSION master
 ENV SWOOLE_VERSION 4.0.1
 
@@ -30,6 +29,7 @@ RUN apk update && apk add --no-cache --virtual .persistent-deps \
     # for soap
     libxml2-dev \
     zeromq-dev \
+    rabbitmq-c \
     libunwind-dev \
     linux-headers \
     libmemcached-dev \
@@ -53,14 +53,6 @@ RUN set -xe && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
         && make  \
         && make install \
         && make test \
-    && cd /tmp && git clone --branch ${RABBITMQ_VERSION} https://github.com/alanxz/rabbitmq-c.git /tmp/rabbitmq \
-        && cd /tmp/rabbitmq \
-        && mkdir build && cd build \
-        && cmake .. \
-        && cmake --build . --target install \
-        # workaround for linking issue
-        && cp -r /usr/local/lib64/* /usr/lib/ \
-    \
     && pecl install \
         memcached \
         mongodb \
