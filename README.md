@@ -5,6 +5,7 @@ Enables
 - mongodb
 - zeromq
 - amqp/rabbitmq
+- apcu
 - redis
 - memcached
 - postgres
